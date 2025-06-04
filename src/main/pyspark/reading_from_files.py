@@ -44,7 +44,7 @@ flattened_df.printSchema()
 flattened_df.writeStream\
     .format("csv")\
     .outputMode("append")\
-    .option("path","../../resources/datasets/output/device_data.csv")\
+    .option("path","../../resources/datasets/output/device_data")\
     .option("checkpointLocation", "../../resources/checkpoint_dir")\
     .start()\
     .awaitTermination()
