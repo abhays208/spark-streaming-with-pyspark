@@ -9,6 +9,7 @@ spark = SparkSession \
     .getOrCreate()
 
 # .config("spark.streaming.stopGraceFullyOnShutdown", True) >> Shuts down the streaming session gracefully on shutdown
+# .In order to make spark read the schema on run time you have to set up this configuration
 spark.conf.set("spark.sql.streaming.schemaInference", True)
 
 data = spark.readStream\
@@ -32,8 +33,18 @@ flattened_df = data_df\
 
 flattened_df.printSchema()
 
+#Write to console
+# flattened_df.writeStream\
+#     .format("console")\
+#     .outputMode("append")\
+#     .start()\
+#     .awaitTermination()
+
+#Write to csv file
 flattened_df.writeStream\
-    .format("console")\
+    .format("csv")\
     .outputMode("append")\
+    .option("path","../../resources/datasets/output/device_data.csv")\
+    .option("checkpointLocation", "../../resources/checkpoint_dir")\
     .start()\
     .awaitTermination()

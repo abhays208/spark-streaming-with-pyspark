@@ -12,7 +12,7 @@ spark = (
     .config("spark.sql.shuffle.partitions", 10)
     .getOrCreate()
 )
-
+spark.conf.set("spark.sql.shuffle.partitions", 8 )
 print(spark)
 
 raw_df = spark.readStream.format("socket").option("host","localhost").option("port","9999").load()
@@ -25,4 +25,4 @@ trans_df = raw_df.withColumn("words", explode(split(lower(col("value")), "\\W+")
     .count() \
     .withColumnRenamed("count","word_count")
 
-trans_df.writeStream.format("console").outputMode("complete").start().awaitTermination()
+trans_df.writeStream.format("console").outputMode("update").start().awaitTermination()
